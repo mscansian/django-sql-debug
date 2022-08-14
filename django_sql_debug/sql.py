@@ -2,7 +2,7 @@ from time import time
 
 from django.conf import settings
 
-from .output import print_header, print_line
+from .output import write_header, write
 
 
 def wrap_cursor(connection):
@@ -56,12 +56,13 @@ class CursorWrapper:
         self._explain_enabled = getattr(settings, 'SQL_DEBUG_ENABLE_EXPLAIN', True)
 
     def _record(self, method, sql, params):
-        print_header('SQL QUERY', '=', '=', color='\033[91m')
-        print_line(sql)
+        write('')
+        write_header('SQL QUERY', '=', '=', color='\033[91m')
+        write(sql)
 
         if self._params_enabled and params:
-            print_header('params', '- ', ' -', color='\033[92m')
-            print_line(params)
+            write_header('params', '- ', ' -', color='\033[92m')
+            write(params)
 
         start_time = time()
         try:
@@ -76,18 +77,18 @@ class CursorWrapper:
                 if self.db.vendor in ['postgresql', 'mysql']:
                     try:
                         cursor = self.db._cursor()
-                        print_header('explain', '- ', ' -', color='\033[93m')
+                        write_header('explain', '- ', ' -', color='\033[93m')
                         cursor.execute(f'EXPLAIN ANALYZE {sql}', params)
                         for row in cursor.fetchall():
-                            print_line(row[0])
+                            write(row[0])
                     finally:
                         cursor.close()
         finally:
             if self._perform_enabled:
-                print_header('performance', '- ', ' -', color='\033[94m')
+                write_header('performance', '- ', ' -', color='\033[94m')
                 duration = (stop_time - start_time) * 1000
-                print_line(f'duration: {duration:.4f}ms')
-            print_line('\033[00m')
+                write(f'duration: {duration:.4f}ms')
+            write('', color='\033[00m')
         return results
 
     def callproc(self, procname, params=None):
