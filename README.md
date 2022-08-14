@@ -85,3 +85,11 @@ MIDDLEWARE = [
     ...
 ]
 ```
+
+
+## Configuration
+You can change some configurations in Django's `settings.py`
+
+- SQL_DEBUG_ENABLE_PARAMS: Include the SQL parameters section in the debug log (default: True)
+- SQL_DEBUG_ENABLE_PERFORMANCE: Include the SQL performance section in the debug log (default: True)
+- SQL_DEBUG_ENABLE_EXPLAIN: Run `EXPLAIN` command on supported databases (default: True)

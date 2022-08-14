@@ -1,4 +1,6 @@
-from time import time, sleep
+from time import time
+
+from django.conf import settings
 
 from .output import print_header, print_line
 
@@ -49,10 +51,15 @@ class CursorWrapper:
         self.cursor = cursor
         self.db = db
 
+        self._params_enabled = getattr(settings, 'SQL_DEBUG_ENABLE_PARAMS', True)
+        self._perform_enabled = getattr(settings, 'SQL_DEBUG_ENABLE_PERFORMANCE', True)
+        self._explain_enabled = getattr(settings, 'SQL_DEBUG_ENABLE_EXPLAIN', True)
+
     def _record(self, method, sql, params):
         print_header('SQL QUERY', '=', '=', color='\033[91m')
         print_line(sql)
-        if params:
+
+        if self._params_enabled and params:
             print_header('params', '- ', ' -', color='\033[92m')
             print_line(params)
 
@@ -65,19 +72,21 @@ class CursorWrapper:
         except Exception:
             raise
         else:
-            if sql.startswith('SELECT'):
-                try:
-                    cursor = self.db._cursor()
-                    print_header('explain analyze', '- ', ' -', color='\033[93m')
-                    cursor.execute(f'EXPLAIN ANALYZE {sql}', params)
-                    for row in cursor.fetchall():
-                        print_line(row[0])
-                finally:
-                    cursor.close()
+            if self._explain_enabled and sql.startswith('SELECT'):
+                if self.db.vendor in ['postgresql', 'mysql']:
+                    try:
+                        cursor = self.db._cursor()
+                        print_header('explain', '- ', ' -', color='\033[93m')
+                        cursor.execute(f'EXPLAIN ANALYZE {sql}', params)
+                        for row in cursor.fetchall():
+                            print_line(row[0])
+                    finally:
+                        cursor.close()
         finally:
-            print_header('performance', '- ', ' -', color='\033[94m')
-            duration = (stop_time - start_time) * 1000
-            print_line(f'duration: {duration:.4f}ms')
+            if self._perform_enabled:
+                print_header('performance', '- ', ' -', color='\033[94m')
+                duration = (stop_time - start_time) * 1000
+                print_line(f'duration: {duration:.4f}ms')
             print_line('\033[00m')
         return results
 
