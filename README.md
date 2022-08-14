@@ -1,4 +1,5 @@
 # django-sql-debug
+Allow users to see in the console all SQL queries made by the Django ORM.
 
 ## Examples
 ### Debugging a single query
