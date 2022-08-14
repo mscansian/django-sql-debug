@@ -16,12 +16,6 @@ using Django. However, since it is focused on displaying the queries using HTML 
 suitable if you are developing a REST API or need to view the queries being run in a unit test. This lib was inspired
 by the weakenesses of Django Debug Toolbar on these use cases.
 
-## Supported database
-Below are the supported databases. If your database is not included it just means it has not being tested and is not
-guaranteed to work.
-
-- PostgreSQL
-
 
 ## Installation
 ```
