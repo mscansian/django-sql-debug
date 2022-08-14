@@ -2,7 +2,7 @@ from time import time
 
 from django.conf import settings
 
-from .output import write_header, write
+from .output import write, write_header
 
 
 def wrap_cursor(connection):
