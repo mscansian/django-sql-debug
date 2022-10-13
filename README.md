@@ -30,7 +30,7 @@ There are many ways to use the library. You can set the scope of the debug using
 from django_sql_debug import debug_sql
 
 
-with @debug_sql():
+with debug_sql():
     SomeModel.objects.get(id=5)  # will be captured
 SomeModel.objects.get(id=5)  # will not be captured
 
