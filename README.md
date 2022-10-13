@@ -18,7 +18,7 @@ by the weakenesses of Django Debug Toolbar on these use cases.
 
 
 ## Installation
-```
+```shell
 pip install django-sql-debug
 ```
 
@@ -26,7 +26,7 @@ pip install django-sql-debug
 There are many ways to use the library. You can set the scope of the debug using one of the examples below.
 
 ### Debugging a small segment of code
-```
+```python
 from django_sql_debug import debug_sql
 
 
@@ -37,7 +37,7 @@ SomeModel.objects.get(id=5)  # will not be captured
 ```
 
 ### Debugging a single function or test
-```
+```python
 from django_sql_debug import debug_sql
 
 
@@ -51,7 +51,7 @@ class MyTest(TestCase):
 ```
 
 ### Debugging an entire TestCase
-```
+```python
 from django_sql_debug import DebugSQLTestCaseMixin
 
 
@@ -66,7 +66,7 @@ class MyTest(DebugSQLTestCaseMixin, TestCase):
 ### Debugging an entire application
 Add `django_sql_debug` to the `INSTALLED_APPS` and `MIDDLEWARES`.
 
-```
+```python
 INSTALLED_APPS = [
     'django_sql_debug',
 
